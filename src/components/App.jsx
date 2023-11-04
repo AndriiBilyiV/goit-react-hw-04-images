@@ -39,7 +39,7 @@ export const App = () => {
               if (hits.length === 0) {
                 notify()
               } else {
-                setCollection([...collection, ...hits])
+                updateCollection(hits);
                   setBtnStatus(page<Math.ceil(totalHits/perPage) ? true : false)
               }
             } catch (err) {
@@ -51,17 +51,23 @@ export const App = () => {
     if (request!=="") {
       asyncFetch();
     }
- },[page,request,collection])
-      
+  }, [page, request])
+  
+  const updateCollection = (hits) => {
+    setCollection([...collection, ...hits])
+  } 
+
   const takeRequest = (req) => {
     setRequest(req);
     setCollection([]);
     setPage(1);
   }
+
   const nextPage = () => {
      setPage(prevState => ( prevState + 1 ))
-    }
-      return (
+  }
+  
+  return (
         <>
           <Searchbar onSubmit={takeRequest} />
           <Toaster />
@@ -78,5 +84,5 @@ export const App = () => {
           {isLoading ?
             <Loader /> : null}
         </>
-      )
-  }
+  )
+}
