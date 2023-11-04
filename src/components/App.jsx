@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { useEffect, useState } from "react";
 import { Searchbar } from "./Searchbar/Searchbar";
 import { ImageGallery } from "./ImageGallery/ImageGallery";
 import { Button } from "./Button/Button";
@@ -17,76 +17,66 @@ const notify = () => toast('Sorry, there is`n photo for your request',{
 
 
 
-export class App extends Component {
-  state = {
-    request: '',
-    collection: [],
-    page: 1,
-    isLoading: false,
-    showBtn: false
-  }
-  async componentDidUpdate(prevProps, prevState) {
- 
-      
-    if (prevState.request !== this.state.request ||
-      prevState.page !== this.state.page) {
-      const data = {
-        page: this.state.page,
-        query: this.state.request
-      }
-      this.setState({
-        isLoading: true
-      })
+export const App = () => {
+  const [request, setRequest] = useState('');
+  const [collection, setCollection] = useState([]);
+  const [page, setPage] = useState(1);
+  const [isLoading, setLoadingStatus] = useState(false);
+  const [showBtn, setBtnStatus] = useState(false);
+
+
+  useEffect(() => {
+    const data = {
+        page: page,
+        query: request
+    }
+      async function asyncFetch() {
+      setLoadingStatus(true);
       try {
-        const result = await fetchColletion(data)
-        
-        const hits = result.hits;
-        const totalHits = result.totalHits;
-        if (hits.length === 0) {
-          notify()
-        } else {
-          this.setState({
-            collection: [...this.state.collection, ...hits],
-            showBtn: (this.state.page<Math.ceil(totalHits/perPage)) ? true : false
-          });
-        }
-      } catch (err) {
-        alert(err)
-      } finally {
-        this.setState({
-            isLoading: false
-          })
+              const result = await fetchColletion(data)
+              const hits = result.hits;
+              const totalHits = result.totalHits;
+              if (hits.length === 0) {
+                notify()
+              } else {
+                setCollection([...collection, ...hits])
+                  setBtnStatus(page<Math.ceil(totalHits/perPage) ? true : false)
+              }
+            } catch (err) {
+              alert(err)
+            } finally {
+              setLoadingStatus(false);
+            }
       }
+    if (request!=="") {
+      asyncFetch();
     }
+ },[page,request])
+      
+  const takeRequest = (req) => {
+    setRequest(req);
+    setCollection([]);
+    setPage(1);
   }
-    takeRequest = (req) => {
-      this.setState({
-        request: req,
-        collection: [],
-        page: 1
-      })
+  const nextPage = () => {
+     setPage(prevState => ( prevState + 1 ))
     }
-    nextPage = () => {
-      this.setState(prevState => ({ page: prevState.page + 1 }))
-    }
-    render() {
       return (
         <>
-          <Searchbar onSubmit={this.takeRequest} />
+          <Searchbar onSubmit={takeRequest} />
           <Toaster />
-          {this.state.collection.length ?
+          {collection.length ?
             <>
-              <ImageGallery collection={this.state.collection} />
-              {this.state.showBtn ?
-                <Button handleClick={this.nextPage} />
+              <ImageGallery collection={collection} />
+              {showBtn ?
+                <Button handleClick={nextPage} />
                 : null
               }
             </>
             : null
           }
-          {this.state.isLoading ?
+          {isLoading ?
             <Loader /> : null}
         </>
       )
-    }
   }

@@ -1,25 +1,20 @@
 import { ImageWrapper } from "./ImageGalleryItem.styled"
-import { Component } from "react";
 import { ModalWindow } from "components/Modal/Modal";
+import { useState } from "react";
 
-export class ImageGalleryItem extends Component {
-    state = {
-        isModalOpen: false
+export const ImageGalleryItem = ({ web, alt, full }) => {
+    const [isModalOpen, setModalStatus] = useState(false);
+    const toggleModal = () => {
+       setModalStatus(prevState => !prevState)
     }
-    toggleModal = () => {
-        this.setState(prevState => ({isModalOpen: !prevState.isModalOpen}))
-    }
-render() {
-    const { web, alt, full } = this.props;
       return (
-        <ImageWrapper onClick={this.toggleModal}>
+        <ImageWrapper onClick={toggleModal}>
             <img src={web} alt={alt} width="360" />
-              <ModalWindow isShow={this.state.isModalOpen}
-                  close={this.toggleModal}
+              <ModalWindow isShow={isModalOpen}
+                  close={toggleModal}
                   url={full}
                   alt={alt}/>
         </ImageWrapper>
     )
-    }
 }
 
