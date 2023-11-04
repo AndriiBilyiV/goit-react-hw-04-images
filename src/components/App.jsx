@@ -51,7 +51,7 @@ export const App = () => {
     if (request!=="") {
       asyncFetch();
     }
- },[page,request])
+ },[page,request,collection])
       
   const takeRequest = (req) => {
     setRequest(req);
