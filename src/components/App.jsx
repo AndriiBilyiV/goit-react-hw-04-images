@@ -30,9 +30,6 @@ export const App = () => {
         page: page,
         query: request
     }
-    const updateCollection = (hits) => {
-    setCollection([...collection, ...hits])
-  } 
       async function asyncFetch() {
       setLoadingStatus(true);
       try {
@@ -42,7 +39,7 @@ export const App = () => {
               if (hits.length === 0) {
                 notify()
               } else {
-                updateCollection(hits);
+                setCollection(prevState => [...prevState, ...hits])
                   setBtnStatus(page<Math.ceil(totalHits/perPage) ? true : false)
               }
             } catch (err) {
