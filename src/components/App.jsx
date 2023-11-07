@@ -30,6 +30,9 @@ export const App = () => {
         page: page,
         query: request
     }
+    const updateCollection = (hits) => {
+    setCollection([...collection, ...hits])
+  } 
       async function asyncFetch() {
       setLoadingStatus(true);
       try {
@@ -53,9 +56,7 @@ export const App = () => {
     }
   }, [page, request])
   
-  const updateCollection = (hits) => {
-    setCollection([...collection, ...hits])
-  } 
+  
 
   const takeRequest = (req) => {
     setRequest(req);
