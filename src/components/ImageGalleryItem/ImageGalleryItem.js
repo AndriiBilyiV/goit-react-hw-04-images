@@ -7,14 +7,17 @@ export const ImageGalleryItem = ({ web, alt, full }) => {
     const toggleModal = () => {
        setModalStatus(prevState => !prevState)
     }
-      return (
+  return (
+        <>
         <ImageWrapper onClick={toggleModal}>
             <img src={web} alt={alt} width="360" />
-              <ModalWindow isShow={isModalOpen}
+             
+      </ImageWrapper>
+      <ModalWindow isShow={isModalOpen}
                   close={toggleModal}
                   url={full}
                   alt={alt}/>
-        </ImageWrapper>
+    </>
     )
 }
 

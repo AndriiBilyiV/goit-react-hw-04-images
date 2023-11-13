@@ -33,9 +33,7 @@ export const App = () => {
       async function asyncFetch() {
       setLoadingStatus(true);
       try {
-              const result = await fetchColletion(data)
-              const hits = result.hits;
-              const totalHits = result.totalHits;
+              const {hits, totalHits} = await fetchColletion(data)
               if (hits.length === 0) {
                 notify()
               } else {
